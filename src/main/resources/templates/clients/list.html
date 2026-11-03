@@ -6,6 +6,9 @@
 
 <main class="container">
     <div th:replace="~{fragments/alerts :: alerts}"></div>
+    <div th:if="${createdClientId != null}" id="quotePrompt"
+         th:data-quote-url="@{/app/quotes/new(clientId=${createdClientId})}"
+         data-message="Cliente creado. ¿Querés armar ahora un presupuesto para este cliente? Se va a abrir el formulario con el cliente ya seleccionado."></div>
 
     <section class="page-head">
         <div>

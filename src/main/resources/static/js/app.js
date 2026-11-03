@@ -1,4 +1,9 @@
 document.addEventListener('DOMContentLoaded', function () {
+    var quotePrompt = document.getElementById('quotePrompt');
+    if (quotePrompt && window.confirm(quotePrompt.getAttribute('data-message'))) {
+        window.location.assign(quotePrompt.getAttribute('data-quote-url'));
+    }
+
     document.querySelectorAll('form[data-prevent-double-submit]').forEach(function (form) {
         var submitting = false;
         form.addEventListener('submit', function (event) {

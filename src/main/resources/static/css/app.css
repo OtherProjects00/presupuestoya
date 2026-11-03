@@ -912,6 +912,12 @@ th.num {
     color: #08664e;
 }
 
+.alert-info {
+    border-color: #d4e0ff;
+    background: var(--blue-mist);
+    color: var(--blue-deep);
+}
+
 .alert-error {
     border-color: #f6d5d1;
     background: var(--danger-soft);

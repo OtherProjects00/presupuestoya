@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -34,8 +35,9 @@ public class ClientController {
     }
 
     @GetMapping("/app/clients/new")
-    public String createForm(Model model) {
+    public String createForm(@RequestParam(defaultValue = "false") boolean forQuote, Model model) {
         model.addAttribute("clientForm", new ClientForm());
+        model.addAttribute("quoteFlow", forQuote);
         return "clients/form";
     }
 
@@ -50,14 +52,20 @@ public class ClientController {
     @PostMapping("/app/clients/save")
     public String save(@Valid @ModelAttribute("clientForm") ClientForm form,
                        BindingResult binding,
+                       Model model,
+                       @RequestParam(defaultValue = "false") boolean forQuote,
                        RedirectAttributes redirectAttributes) {
         if (binding.hasErrors()) {
+            model.addAttribute("quoteFlow", forQuote);
             return "clients/form";
         }
         AppUser user = currentUserService.requireCurrentUser();
         if (form.getId() == null) {
-            clientService.create(user, form);
+            Client client = clientService.create(user, form);
             redirectAttributes.addFlashAttribute("success", "Cliente creado.");
+            if (forQuote) {
+                redirectAttributes.addFlashAttribute("createdClientId", client.getId());
+            }
         } else {
             clientService.update(user, form.getId(), form);
             redirectAttributes.addFlashAttribute("success", "Cliente actualizado.");

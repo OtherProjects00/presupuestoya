@@ -59,14 +59,18 @@ public class QuoteController {
     }
 
     @GetMapping("/app/quotes/new")
-    public String createForm(Model model, RedirectAttributes redirectAttributes) {
+    public String createForm(@RequestParam(required = false) Long clientId,
+                             Model model,
+                             RedirectAttributes redirectAttributes) {
         AppUser user = currentUserService.requireCurrentUser();
         if (clientService.list(user).isEmpty()) {
-            redirectAttributes.addFlashAttribute("error", "Primero creá un cliente para armar un presupuesto.");
-            return "redirect:/app/clients/new";
+            return "redirect:/app/clients/new?forQuote=true";
         }
         var profile = profileService.get(user);
         QuoteForm form = new QuoteForm();
+        if (clientId != null) {
+            form.setClientId(clientService.get(user, clientId).getId());
+        }
         form.setIssueDate(LocalDate.now());
         form.setValidUntil(LocalDate.now().plusDays(profile.getDefaultValidityDays()));
         form.setTaxRate(profile.getDefaultTaxRate());

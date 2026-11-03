@@ -17,6 +17,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -181,6 +182,45 @@ class PresupuestoYaApplicationTests {
         assertThat(quote.getSubtotal()).isEqualByComparingTo("3001.00");
         assertThat(quote.getTaxAmount()).isEqualByComparingTo("630.21");
         assertThat(quote.getTotal()).isEqualByComparingTo("3631.21");
+    }
+
+    @Test
+    void quoteCreationGuidesUserThroughCreatingFirstClient() throws Exception {
+        AppUser owner = createUser("primercliente");
+
+        mvc.perform(get("/app/quotes/new").with(user(owner.getEmail())))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/app/clients/new?forQuote=true"));
+
+        mvc.perform(get("/app/clients/new")
+                        .param("forQuote", "true")
+                        .with(user(owner.getEmail())))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("este cliente ya va a estar seleccionado")))
+                .andExpect(content().string(containsString("forQuote=true")));
+
+        MvcResult clientSave = mvc.perform(post("/app/clients/save")
+                        .with(user(owner.getEmail()))
+                        .with(csrf())
+                        .param("forQuote", "true")
+                        .param("name", "Cliente del primer presupuesto"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/app/clients"))
+                .andReturn();
+
+        Client client = clientService.list(owner).get(0);
+        mvc.perform(get("/app/clients")
+                        .with(user(owner.getEmail()))
+                        .flashAttrs(clientSave.getFlashMap()))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("id=\"quotePrompt\"")))
+                .andExpect(content().string(containsString("clientId=" + client.getId())));
+
+        mvc.perform(get("/app/quotes/new")
+                        .param("clientId", client.getId().toString())
+                        .with(user(owner.getEmail())))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("value=\"" + client.getId() + "\" selected")));
     }
 
     @Test

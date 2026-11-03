@@ -15,7 +15,12 @@
         <a th:href="@{/app/clients}" class="btn">Volver</a>
     </section>
 
-    <form th:action="@{/app/clients/save}" th:object="${clientForm}" method="post" class="card form-card">
+    <div th:if="${quoteFlow}" class="alert alert-info" role="status">
+        Primero guardá los datos del cliente. Después te vamos a preguntar si querés armar un presupuesto
+        y, si aceptás, este cliente ya va a estar seleccionado.
+    </div>
+
+    <form th:action="@{/app/clients/save(forQuote=${quoteFlow})}" th:object="${clientForm}" method="post" class="card form-card">
         <div th:if="${#fields.hasGlobalErrors()}" class="alert alert-error" role="alert">
             <p th:each="error : ${#fields.globalErrors()}" th:text="${error}"></p>
         </div>
