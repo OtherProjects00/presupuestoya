@@ -1,0 +1,40 @@
+<aside th:fragment="authAside(kicker, title, copy)" class="auth-aside" xmlns:th="http://www.thymeleaf.org">
+    <span class="auth-grid" aria-hidden="true"></span>
+    <span class="auth-hex auth-hex--one" aria-hidden="true"></span>
+    <span class="auth-hex auth-hex--two" aria-hidden="true"></span>
+    <span class="auth-hex auth-hex--three" aria-hidden="true"></span>
+
+    <div class="auth-aside-top">
+        <a th:replace="~{fragments/brand :: brand}"></a>
+        <span class="auth-pill">Hecho para oficios</span>
+    </div>
+
+    <div class="auth-aside-copy">
+        <p class="auth-kicker" th:text="${kicker}">Tu espacio de trabajo</p>
+        <h2 th:text="${title}">Todo listo para el próximo trabajo.</h2>
+        <p th:text="${copy}">Tus clientes, tus presupuestos y tus números en un solo lugar.</p>
+    </div>
+
+    <div class="auth-visual" aria-hidden="true">
+        <div class="auth-preview">
+            <div class="auth-preview-head">
+                <span class="auth-preview-tag">Presupuesto</span>
+                <span class="badge badge-sent">Enviado</span>
+            </div>
+            <strong class="auth-preview-number">P-2026-014</strong>
+            <p class="auth-preview-client">Laura Gómez · Cambio de grifería</p>
+            <div class="auth-preview-line"><span>Materiales</span><strong>$ 56.500</strong></div>
+            <div class="auth-preview-line"><span>Mano de obra</span><strong>$ 35.000</strong></div>
+            <div class="auth-preview-total"><span>Total</span><strong>ARS 91.500</strong></div>
+            <div class="auth-note">
+                <span class="auth-note-icon">✓</span>
+                <span>
+                    <strong>Listo para enviar</strong>
+                    <small>Tu cliente lo abre desde el celular.</small>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <p class="auth-aside-foot">Presupuestos claros. Menos idas y vueltas.</p>
+</aside>

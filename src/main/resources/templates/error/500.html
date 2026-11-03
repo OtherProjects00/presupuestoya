@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Error')}"></head>
+<body class="auth-page">
+<header th:replace="~{fragments/header :: header}"></header>
+<main class="auth-container">
+    <section class="auth-card">
+        <p class="eyebrow">Error</p>
+        <h1>Algo salió mal</h1>
+        <p class="muted">Probá de nuevo en unos segundos. Si el problema sigue, contactá al administrador.</p>
+        <a th:href="@{/}" class="btn btn-primary btn-block">Volver al inicio</a>
+    </section>
+</main>
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

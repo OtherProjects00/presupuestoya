@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Solicitud inválida')}"></head>
+<body class="auth-page">
+<header th:replace="~{fragments/header :: header}"></header>
+<main class="auth-container">
+    <section class="auth-card">
+        <p class="eyebrow">Error 400</p>
+        <h1>Revisá los datos</h1>
+        <p class="muted" th:text="${message != null ? message : 'La solicitud no es válida.'}">La solicitud no es válida.</p>
+        <a th:href="@{/app}" class="btn btn-primary btn-block">Volver al panel</a>
+    </section>
+</main>
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

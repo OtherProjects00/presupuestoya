@@ -1,0 +1,10 @@
+<head th:fragment="head(title)" xmlns:th="http://www.thymeleaf.org">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="PresupuestoYa: presupuestos simples y profesionales para oficios y pequeños negocios.">
+    <meta name="theme-color" content="#0b2d78">
+    <title th:text="|${title} · PresupuestoYa|">PresupuestoYa</title>
+    <link rel="icon" type="image/svg+xml" th:href="@{/favicon.svg}">
+    <link rel="preload" th:href="@{/fonts/roboto-latin.woff2}" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>

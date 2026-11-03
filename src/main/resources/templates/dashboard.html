@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Panel')}"></head>
+<body>
+<header th:replace="~{fragments/header :: header}"></header>
+
+<main class="container">
+    <div th:replace="~{fragments/alerts :: alerts}"></div>
+
+    <section class="page-head">
+        <div>
+            <p class="eyebrow">Panel de trabajo</p>
+            <h1 th:text="|Hola, ${profile.businessName}|">Hola</h1>
+            <p class="muted">Este es el resumen de tu actividad.</p>
+        </div>
+        <div class="page-actions">
+            <a th:href="@{/app/quotes/new}" class="btn btn-primary">Nuevo presupuesto</a>
+            <a th:href="@{/app/clients/new}" class="btn">Nuevo cliente</a>
+        </div>
+    </section>
+
+    <section class="stats-grid">
+        <article class="stat-card">
+            <span class="stat-label">Presupuestos</span>
+            <strong th:text="${stats.totalQuotes()}">0</strong>
+            <span class="muted" th:text="|${stats.drafts()} en borrador|">0 en borrador</span>
+        </article>
+        <article class="stat-card">
+            <span class="stat-label">Enviados</span>
+            <strong th:text="${stats.sent()}">0</strong>
+            <span class="muted">Esperando respuesta</span>
+        </article>
+        <article class="stat-card">
+            <span class="stat-label">Aceptados</span>
+            <strong th:text="${stats.accepted()}">0</strong>
+            <span class="muted" th:text="|${stats.rejected()} rechazados|">0 rechazados</span>
+        </article>
+        <article class="stat-card stat-card-accent">
+            <span class="stat-label">Aceptado</span>
+            <strong th:text="|${profile.currency} ${#numbers.formatDecimal(stats.acceptedTotal(), 1, 'POINT', 2, 'COMMA')}|">ARS 0,00</strong>
+            <span class="muted">Valor de presupuestos aceptados</span>
+        </article>
+    </section>
+
+    <section class="section">
+        <div class="section-head">
+            <h2>Últimos presupuestos</h2>
+            <a th:href="@{/app/quotes}" class="link">Ver todos</a>
+        </div>
+
+        <div th:if="${#lists.isEmpty(stats.recentQuotes())}" class="empty-state">
+            <h3>Todavía no hay presupuestos</h3>
+            <p>Creá tu primer cliente y después armá un presupuesto en menos de dos minutos.</p>
+            <a th:href="@{/app/clients/new}" class="btn btn-primary">Empezar por un cliente</a>
+        </div>
+
+        <div th:if="${!#lists.isEmpty(stats.recentQuotes())}" class="table-wrap table-stack">
+            <table>
+                <thead>
+                <tr>
+                    <th>Número</th>
+                    <th>Cliente</th>
+                    <th>Fecha</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="quote : ${stats.recentQuotes()}">
+                    <td class="mono" data-label="Número" th:text="${quote.number}">P-2026-0000</td>
+                    <td data-label="Cliente" th:text="${quote.client.name}">Cliente</td>
+                    <td data-label="Fecha" th:text="${quote.issueDateFormatted}">01/01/2026</td>
+                    <td class="mono" data-label="Total" th:text="|${profile.currency} ${#numbers.formatDecimal(quote.total, 1, 'POINT', 2, 'COMMA')}|">ARS 0,00</td>
+                    <td data-label="Estado"><span class="badge" th:classappend="${quote.displayStatusCss}" th:text="${quote.displayStatusLabel}">Borrador</span></td>
+                    <td class="mobile-actions"><a th:href="@{/app/quotes/{id}(id=${quote.id})}" class="link">Abrir</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="grid grid-3 section quick-grid">
+        <article class="card quick-card">
+            <h2>Clientes</h2>
+            <p class="muted">Tenés <strong th:text="${clientsCount}">0</strong> clientes cargados.</p>
+            <a th:href="@{/app/clients}" class="link">Gestionar clientes</a>
+        </article>
+        <article class="card quick-card">
+            <h2>Mi negocio</h2>
+            <p class="muted">Completá tus datos para que los presupuestos se vean profesionales.</p>
+            <a th:href="@{/app/settings}" class="link">Editar datos</a>
+        </article>
+        <article class="card quick-card">
+            <h2>Compartir</h2>
+            <p class="muted">Cada presupuesto puede tener un enlace público con vencimiento.</p>
+            <a th:href="@{/app/quotes}" class="link">Ver presupuestos</a>
+        </article>
+    </section>
+</main>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+<script th:src="@{/js/app.js}" defer></script>
+</body>
+</html>

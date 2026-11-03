@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#0b2d78">
+    <title th:text="|Presupuesto ${quote.number}|">Presupuesto</title>
+    <link rel="icon" type="image/svg+xml" th:href="@{/favicon.svg}">
+    <link rel="preload" th:href="@{/fonts/roboto-latin.woff2}" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body class="print-page">
+<div class="print-toolbar no-print">
+    <button type="button" id="printButton" class="btn btn-primary">Imprimir / Guardar PDF</button>
+    <a th:href="@{/app/quotes/{id}(id=${quote.id})}" class="btn">Volver</a>
+</div>
+
+<main class="print-sheet">
+    <header class="print-header">
+        <div>
+            <h1 th:text="${profile.businessName}">Negocio</h1>
+            <p th:if="${profile.ownerName != null}" th:text="${profile.ownerName}">Responsable</p>
+            <p th:if="${profile.phone != null}" th:text="${profile.phone}">Teléfono</p>
+            <p th:if="${profile.email != null}" th:text="${profile.email}">Email</p>
+            <p th:if="${profile.address != null}" th:text="${profile.address}">Dirección</p>
+            <p th:if="${profile.taxId != null}" th:text="|CUIT/CUIT: ${profile.taxId}|">CUIT</p>
+        </div>
+        <div class="print-meta">
+            <p class="print-kicker">PRESUPUESTO</p>
+            <p class="print-number" th:text="${quote.number}">P-2026-0000</p>
+            <p th:text="|Emisión: ${quote.issueDateFormatted}|">Emisión</p>
+            <p th:text="|Válido hasta: ${quote.validUntilFormatted}|">Válido</p>
+            <p><span class="badge" th:classappend="${quote.displayStatusCss}" th:text="${quote.displayStatusLabel}">Borrador</span></p>
+        </div>
+    </header>
+
+    <section class="print-client">
+        <h2>Cliente</h2>
+        <p class="strong" th:text="${quote.client.name}">Cliente</p>
+        <p th:if="${quote.client.phone != null}" th:text="${quote.client.phone}">Teléfono</p>
+        <p th:if="${quote.client.email != null}" th:text="${quote.client.email}">Email</p>
+        <p th:if="${quote.client.address != null}" th:text="${quote.client.address}">Dirección</p>
+    </section>
+
+    <table class="print-table">
+        <thead>
+        <tr>
+            <th>Descripción</th>
+            <th class="num">Cantidad</th>
+            <th class="num">Precio unitario</th>
+            <th class="num">Subtotal</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item : ${quote.items}">
+            <td th:text="${item.description}">Descripción</td>
+            <td class="num" th:text="${#numbers.formatDecimal(item.quantity, 1, 2)}">1</td>
+            <td class="num" th:text="${profile.currency + ' ' + #numbers.formatDecimal(item.unitPrice, 1, 'POINT', 2, 'COMMA')}">ARS 0,00</td>
+            <td class="num" th:text="${profile.currency + ' ' + #numbers.formatDecimal(item.lineTotal, 1, 'POINT', 2, 'COMMA')}">ARS 0,00</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="print-totals">
+        <div><span>Subtotal</span><strong th:text="${profile.currency + ' ' + #numbers.formatDecimal(quote.subtotal, 1, 'POINT', 2, 'COMMA')}">ARS 0,00</strong></div>
+        <div><span>IVA (<span th:text="${#numbers.formatDecimal(quote.taxRate, 1, 2)}">0</span>%)</span><strong th:text="${profile.currency + ' ' + #numbers.formatDecimal(quote.taxAmount, 1, 'POINT', 2, 'COMMA')}">ARS 0,00</strong></div>
+        <div class="grand-total"><span>Total</span><strong th:text="${profile.currency + ' ' + #numbers.formatDecimal(quote.total, 1, 'POINT', 2, 'COMMA')}">ARS 0,00</strong></div>
+    </div>
+
+    <section th:if="${quote.notes != null}" class="print-notes">
+        <h2>Observaciones</h2>
+        <p class="pre-line" th:text="${quote.notes}">Observaciones</p>
+    </section>
+
+    <section th:if="${quote.terms != null}" class="print-notes">
+        <h2>Condiciones</h2>
+        <p class="pre-line" th:text="${quote.terms}">Condiciones</p>
+    </section>
+
+    <footer class="print-footer">
+        <p>Gracias por confiar en <span th:text="${profile.businessName}">el negocio</span>.</p>
+        <p>Presupuesto generado con PresupuestoYa.</p>
+    </footer>
+</main>
+
+<script th:src="@{/js/app.js}" defer></script>
+</body>
+</html>

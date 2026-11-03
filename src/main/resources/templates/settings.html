@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Mi negocio')}"></head>
+<body>
+<header th:replace="~{fragments/header :: header}"></header>
+
+<main class="container narrow">
+    <div th:replace="~{fragments/alerts :: alerts}"></div>
+
+    <section class="page-head">
+        <div>
+            <p class="eyebrow">Configuración</p>
+            <h1>Mi negocio</h1>
+            <p class="muted">Estos datos aparecen en tus presupuestos y en el enlace público.</p>
+        </div>
+        <a th:href="@{/app}" class="btn">Volver al panel</a>
+    </section>
+
+    <form th:action="@{/app/settings}" th:object="${settingsForm}" method="post" class="card form-card">
+        <div th:if="${#fields.hasGlobalErrors()}" class="alert alert-error" role="alert">
+            <p th:each="error : ${#fields.globalErrors()}" th:text="${error}"></p>
+        </div>
+
+        <label for="businessName">Nombre del negocio *</label>
+        <input id="businessName" type="text" th:field="*{businessName}" maxlength="120" required class="input">
+        <p class="field-error" th:if="${#fields.hasErrors('businessName')}" th:errors="*{businessName}"></p>
+
+        <div class="form-grid">
+            <div>
+                <label for="ownerName">Responsable</label>
+                <input id="ownerName" type="text" th:field="*{ownerName}" maxlength="80" class="input">
+                <p class="field-error" th:if="${#fields.hasErrors('ownerName')}" th:errors="*{ownerName}"></p>
+            </div>
+            <div>
+                <label for="taxId">CUIT / RUT / RFC</label>
+                <input id="taxId" type="text" th:field="*{taxId}" maxlength="40" class="input">
+                <p class="field-error" th:if="${#fields.hasErrors('taxId')}" th:errors="*{taxId}"></p>
+            </div>
+        </div>
+
+        <div class="form-grid">
+            <div>
+                <label for="phone">Teléfono / WhatsApp</label>
+                <input id="phone" type="tel" th:field="*{phone}" maxlength="40" class="input"
+                       placeholder="+54 9 11 5555-5555">
+                <p class="field-error" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></p>
+            </div>
+            <div>
+                <label for="email">Email de contacto</label>
+                <input id="email" type="email" th:field="*{email}" maxlength="254" class="input">
+                <p class="field-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
+            </div>
+        </div>
+
+        <label for="address">Dirección</label>
+        <input id="address" type="text" th:field="*{address}" maxlength="250" class="input">
+        <p class="field-error" th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></p>
+
+        <div class="form-grid">
+            <div>
+                <label for="currency">Moneda *</label>
+                <input id="currency" type="text" th:field="*{currency}" maxlength="3" required class="input input-short"
+                       placeholder="ARS">
+                <p class="help">Código de 3 letras: ARS, USD, EUR, MXN, CLP.</p>
+                <p class="field-error" th:if="${#fields.hasErrors('currency')}" th:errors="*{currency}"></p>
+            </div>
+            <div>
+                <label for="defaultTaxRate">IVA por defecto (%)</label>
+                <input id="defaultTaxRate" type="number" step="0.01" min="0" max="100" th:field="*{defaultTaxRate}"
+                       class="input input-short">
+                <p class="field-error" th:if="${#fields.hasErrors('defaultTaxRate')}" th:errors="*{defaultTaxRate}"></p>
+            </div>
+            <div>
+                <label for="defaultValidityDays">Validez por defecto (días)</label>
+                <input id="defaultValidityDays" type="number" min="1" max="365" th:field="*{defaultValidityDays}"
+                       class="input input-short">
+                <p class="field-error" th:if="${#fields.hasErrors('defaultValidityDays')}" th:errors="*{defaultValidityDays}"></p>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Guardar cambios</button>
+        </div>
+    </form>
+
+    <section class="card section">
+        <h2>Seguridad y datos</h2>
+        <p class="muted">Tu contraseña se guarda cifrada con BCrypt. No se muestra ni se puede recuperar desde la base de datos.</p>
+        <p class="muted">Los enlaces públicos tienen un token aleatorio, vencen y se pueden revocar en cualquier momento.</p>
+    </section>
+</main>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+<script th:src="@{/js/app.js}" defer></script>
+</body>
+</html>

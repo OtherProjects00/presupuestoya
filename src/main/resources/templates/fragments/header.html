@@ -1,0 +1,20 @@
+<header th:fragment="header" class="topbar" xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <a th:replace="~{fragments/brand :: brand}"></a>
+
+    <nav class="nav" sec:authorize="isAuthenticated()" aria-label="Navegación principal">
+        <a th:href="@{/app}">Panel</a>
+        <a th:href="@{/app/clients}">Clientes</a>
+        <a th:href="@{/app/quotes}">Presupuestos</a>
+        <a th:href="@{/app/settings}">Mi negocio</a>
+        <span class="nav-user"><span th:text="${currentUser != null ? currentUser.displayName : ''}">Usuario</span></span>
+        <form th:action="@{/logout}" method="post" class="inline-form">
+            <button type="submit" class="link-button">Salir</button>
+        </form>
+    </nav>
+
+    <nav class="nav" sec:authorize="!isAuthenticated()" aria-label="Acceso">
+        <a th:href="@{/login}">Ingresar</a>
+        <a th:href="@{/register}" class="btn btn-primary btn-small">Crear cuenta</a>
+    </nav>
+</header>

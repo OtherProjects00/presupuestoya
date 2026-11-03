@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Presupuesto')}"></head>
+<body>
+<header th:replace="~{fragments/header :: header}"></header>
+
+<main class="container">
+    <th:block th:if="${publicUrl == null}">
+        <div th:replace="~{fragments/alerts :: alerts}"></div>
+    </th:block>
+
+    <section class="page-head">
+        <div>
+            <p class="eyebrow">Presupuesto</p>
+            <h1 class="mono" th:text="${quote.number}">P-2026-0000</h1>
+            <p class="muted">
+                <span class="badge" th:classappend="${quote.displayStatusCss}" th:text="${quote.displayStatusLabel}">Borrador</span>
+                <span th:text="| · Emitido el ${quote.issueDateFormatted}|"> · Emitido</span>
+                <span th:text="| · Válido hasta ${quote.validUntilFormatted}|"> · Válido</span>
+            </p>
+        </div>
+        <div class="page-actions">
+            <a th:if="${quote.draft}" th:href="@{/app/quotes/{id}/edit(id=${quote.id})}" class="btn">Editar</a>
+            <a th:href="@{/app/quotes/{id}/print(id=${quote.id})}" target="_blank" rel="noopener noreferrer" class="btn">Imprimir / PDF</a>
+        </div>
+    </section>
+
+    <div th:if="${publicUrl}" class="alert alert-success">
+        <p><strong>Enlace público generado.</strong> Copialo ahora: por seguridad no se vuelve a mostrar.</p>
+        <div class="copy-row">
+            <input id="publicUrlField" type="text" class="input" readonly th:value="${publicUrl}">
+            <button type="button" class="btn btn-small" data-copy-target="#publicUrlField">Copiar</button>
+        </div>
+        <p class="small"><a th:href="${publicUrl}" target="_blank" rel="noopener noreferrer">Abrir enlace público</a></p>
+    </div>
+
+    <section class="grid grid-2">
+        <article class="card">
+            <h2>Tu negocio</h2>
+            <p class="strong" th:text="${profile.businessName}">Negocio</p>
+            <p th:if="${profile.ownerName != null}" th:text="${profile.ownerName}">Responsable</p>
+            <p th:if="${profile.phone != null}" th:text="${profile.phone}">Teléfono</p>
+            <p th:if="${profile.email != null}" th:text="${profile.email}">Email</p>
+            <p th:if="${profile.address != null}" th:text="${profile.address}">Dirección</p>
+            <p th:if="${profile.taxId != null}" th:text="|CUIT/CUIT: ${profile.taxId}|">CUIT</p>
+        </article>
+        <article class="card">
+            <h2>Cliente</h2>
+            <p class="strong" th:text="${quote.client.name}">Cliente</p>
+            <p th:if="${quote.client.phone != null}" th:text="${quote.client.phone}">Teléfono</p>
+            <p th:if="${quote.client.email != null}" th:text="${quote.client.email}">Email</p>
+            <p th:if="${quote.client.address != null}" th:text="${quote.client.address}">Dirección</p>
+        </article>
+    </section>
+
+    <section class="card section">
+        <h2>Detalle</h2>
+        <div class="table-wrap table-stack">
+            <table>
+                <thead>
+                <tr>
+                    <th>Descripción</th>
+                    <th class="num">Cantidad</th>
+                    <th class="num">Precio unitario</th>
+                    <th class="num">Subtotal</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="item : ${quote.items}">
+                    <td data-label="Descripción" th:text="${item.description}">Descripción</td>
+                    <td class="num" data-label="Cantidad" th:text="${#numbers.formatDecimal(item.quantity, 1, 2)}">1</td>
+                    <td class="num" data-label="Precio unitario" th:text="${profile.currency + ' ' + #numbers.formatDecimal(item.unitPrice, 1, 'POINT', 2, 'COMMA')}">ARS 0,00</td>
+                    <td class="num" data-label="Subtotal" th:text="${profile.currency + ' ' + #numbers.formatDecimal(item.lineTotal, 1, 'POINT', 2, 'COMMA')}">ARS 0,00</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="totals">
+            <div><span>Subtotal</span><strong th:text="${profile.currency + ' ' + #numbers.formatDecimal(quote.subtotal, 1, 'POINT', 2, 'COMMA')}">ARS 0,00</strong></div>
+            <div><span>IVA (<span th:text="${#numbers.formatDecimal(quote.taxRate, 1, 2)}">0</span>%)</span><strong th:text="${profile.currency + ' ' + #numbers.formatDecimal(quote.taxAmount, 1, 'POINT', 2, 'COMMA')}">ARS 0,00</strong></div>
+            <div class="grand-total"><span>Total</span><strong th:text="${profile.currency + ' ' + #numbers.formatDecimal(quote.total, 1, 'POINT', 2, 'COMMA')}">ARS 0,00</strong></div>
+        </div>
+    </section>
+
+    <section th:if="${quote.notes != null or quote.terms != null}" class="grid grid-2 section">
+        <article th:if="${quote.notes != null}" class="card">
+            <h2>Observaciones</h2>
+            <p class="pre-line" th:text="${quote.notes}">Observaciones</p>
+        </article>
+        <article th:if="${quote.terms != null}" class="card">
+            <h2>Condiciones</h2>
+            <p class="pre-line" th:text="${quote.terms}">Condiciones</p>
+        </article>
+    </section>
+
+    <section class="card section">
+        <h2>Acciones</h2>
+        <div class="action-row">
+            <form th:if="${quote.draft}" th:action="@{/app/quotes/{id}/status(id=${quote.id})}" method="post">
+                <input type="hidden" name="status" value="SENT">
+                <button type="submit" class="btn btn-primary">Marcar como enviado</button>
+            </form>
+
+            <form th:if="${quote.sent}" th:action="@{/app/quotes/{id}/status(id=${quote.id})}" method="post">
+                <input type="hidden" name="status" value="ACCEPTED">
+                <button type="submit" class="btn btn-primary">Marcar aceptado</button>
+            </form>
+
+            <form th:if="${quote.sent}" th:action="@{/app/quotes/{id}/status(id=${quote.id})}" method="post">
+                <input type="hidden" name="status" value="REJECTED">
+                <button type="submit" class="btn">Marcar rechazado</button>
+            </form>
+
+            <form th:action="@{/app/quotes/{id}/share(id=${quote.id})}" method="post">
+                <button type="submit" class="btn" data-confirm="Se va a generar un enlace nuevo. El anterior dejará de funcionar. ¿Continuar?">
+                    <span th:text="${quote.publicLinkActive ? 'Regenerar enlace público' : 'Generar enlace público'}">Enlace público</span>
+                </button>
+            </form>
+
+            <form th:if="${quote.publicLinkActive}" th:action="@{/app/quotes/{id}/share/revoke(id=${quote.id})}" method="post"
+                  data-confirm="¿Revocar el enlace público? El cliente ya no va a poder verlo.">
+                <button type="submit" class="btn">Revocar enlace</button>
+            </form>
+
+            <form th:if="${quote.draft}" th:action="@{/app/quotes/{id}/delete(id=${quote.id})}" method="post"
+                  data-confirm="¿Borrar este borrador? Esta acción no se puede deshacer.">
+                <button type="submit" class="btn danger">Borrar borrador</button>
+            </form>
+        </div>
+
+        <p th:if="${quote.publicLinkActive}" class="muted small">
+            Enlace activo hasta <span th:text="${quote.publicLinkExpiresAtFormatted}">fecha</span>.
+            Por seguridad, la URL completa solo se muestra al generarlo.
+        </p>
+    </section>
+</main>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+<script th:src="@{/js/app.js}" defer></script>
+</body>
+</html>

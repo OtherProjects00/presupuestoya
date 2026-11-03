@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Inicio')}"></head>
+<body class="landing-page">
+<header th:replace="~{fragments/header :: header}"></header>
+
+<main class="landing">
+    <section class="landing-hero">
+        <div class="container hero-grid">
+            <div class="hero-copy">
+                <p class="eyebrow">
+                    <span class="eyebrow-mark" aria-hidden="true"></span>
+                    Para plomeros, electricistas, pintores y oficios
+                </p>
+                <h1>Presupuestos profesionales <span class="hero-highlight"><br>en minutos,<br>no en días.</span></h1>
+                <p class="lead">
+                    Cargá el trabajo, armá el presupuesto, compartí un enlace y hacé seguimiento.
+                    Sin planillas, sin letra ilegible y sin perder el próximo trabajo.
+                </p>
+                <div class="hero-actions">
+                    <a th:if="${currentUser == null}" th:href="@{/register}" class="btn btn-primary btn-lg">Empezar gratis</a>
+                    <a th:if="${currentUser == null}" th:href="@{/login}" class="btn btn-lg">Ya tengo cuenta</a>
+                    <a th:if="${currentUser != null}" th:href="@{/app}" class="btn btn-primary btn-lg">Ir a mi panel</a>
+                </div>
+                <p class="hero-note">Sin tarjeta. Sin instalación. Funciona en el celular.</p>
+
+                <div class="hero-proof" aria-label="Ventajas de PresupuestoYa">
+                    <div>
+                        <strong>2 min</strong>
+                        <span>para armar un presupuesto</span>
+                    </div>
+                    <div>
+                        <strong>100%</strong>
+                        <span>tus datos, bajo tu control</span>
+                    </div>
+                    <div>
+                        <strong>PDF</strong>
+                        <span>listo para enviar</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero-visual">
+                <div class="hero-panel">
+                    <span class="hex-decoration hex-decoration--lg" aria-hidden="true"></span>
+                    <span class="hex-decoration hex-decoration--sm" aria-hidden="true"></span>
+
+                    <div class="quote-preview" aria-label="Ejemplo de presupuesto">
+                        <div class="preview-top">
+                            <span class="preview-brand">P-2026-7K3M9Q</span>
+                            <span class="badge badge-sent">Enviado</span>
+                        </div>
+                        <h2>Cambio de grifería</h2>
+                        <p class="muted">Cliente: Laura Gómez · 02/11/2026</p>
+                        <div class="preview-line"><span>Grifería monocomando</span><strong>$ 48.000</strong></div>
+                        <div class="preview-line"><span>Mano de obra</span><strong>$ 35.000</strong></div>
+                        <div class="preview-line"><span>Materiales menores</span><strong>$ 8.500</strong></div>
+                        <div class="preview-total"><span>Total</span><strong>$ 91.500</strong></div>
+                    </div>
+
+                    <div class="hero-float hero-float--top">
+                        <span class="float-icon" aria-hidden="true">✓</span>
+                        <span>
+                            <strong>Abierto por tu cliente</strong>
+                            <small>hace 2 minutos</small>
+                        </span>
+                    </div>
+
+                    <div class="hero-float hero-float--bottom">
+                        <span class="float-kicker">Total del mes</span>
+                        <strong>ARS 1.240.000</strong>
+                        <span class="float-trend">+18% vs. mes anterior</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="container workflow">
+        <div class="workflow-head">
+            <p class="eyebrow">Cómo funciona</p>
+            <h2>Del “paso mañana” a un sí por escrito.</h2>
+            <p class="lead">Tres pasos, cero planillas. Así de simple es mantener el trabajo en movimiento.</p>
+        </div>
+
+        <ol class="workflow-list">
+            <li>
+                <span class="step-num" aria-hidden="true">01</span>
+                <div>
+                    <h3>Más rápido</h3>
+                    <p>Armá un presupuesto con ítems, cantidades y precios en una sola pantalla.</p>
+                </div>
+            </li>
+            <li>
+                <span class="step-num" aria-hidden="true">02</span>
+                <div>
+                    <h3>Más profesional</h3>
+                    <p>Compartí un enlace público con tu cliente o imprimí el presupuesto en PDF.</p>
+                </div>
+            </li>
+            <li>
+                <span class="step-num" aria-hidden="true">03</span>
+                <div>
+                    <h3>Más control</h3>
+                    <p>Sepa qué presupuestos están enviados, aceptados o pendientes de seguimiento.</p>
+                </div>
+            </li>
+        </ol>
+    </section>
+
+    <section class="container">
+        <div class="security-strip">
+            <span class="security-mark" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" focusable="false">
+                    <path d="M12 3 19 6v5c0 4.4-3 8-7 10-4-2-7-5.6-7-10V6z" stroke="currentColor" stroke-width="1.8"
+                          stroke-linejoin="round"/>
+                    <path d="m9 12 2 2 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                          stroke-linejoin="round"/>
+                </svg>
+            </span>
+            <div>
+                <strong>Seguridad desde el diseño.</strong>
+                <p>Trabaja con datos protegidos y cumple con las normativas de privacidad.</p>
+            </div>
+            <a th:if="${currentUser == null}" th:href="@{/register}" class="btn btn-light">Crear mi cuenta</a>
+        </div>
+    </section>
+</main>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+<script th:src="@{/js/app.js}" defer></script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Clientes')}"></head>
+<body>
+<header th:replace="~{fragments/header :: header}"></header>
+
+<main class="container">
+    <div th:replace="~{fragments/alerts :: alerts}"></div>
+
+    <section class="page-head">
+        <div>
+            <p class="eyebrow">Clientes</p>
+            <h1>Tus clientes</h1>
+            <p class="muted">Guardá los datos una vez y reutilizalos en cada presupuesto.</p>
+        </div>
+        <a th:href="@{/app/clients/new}" class="btn btn-primary">Nuevo cliente</a>
+    </section>
+
+    <div th:if="${#lists.isEmpty(clients)}" class="empty-state">
+        <h3>No hay clientes todavía</h3>
+        <p>Empezá cargando el nombre y el teléfono de tu primer cliente.</p>
+        <a th:href="@{/app/clients/new}" class="btn btn-primary">Cargar cliente</a>
+    </div>
+
+    <div th:if="${!#lists.isEmpty(clients)}" class="table-wrap table-stack">
+        <table>
+            <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Teléfono</th>
+                <th>Email</th>
+                <th>Dirección</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="client : ${clients}">
+                <td data-label="Nombre"><strong th:text="${client.name}">Cliente</strong></td>
+                <td data-label="Teléfono" th:text="${client.phone != null ? client.phone : '—'}">—</td>
+                <td data-label="Email" th:text="${client.email != null ? client.email : '—'}">—</td>
+                <td data-label="Dirección" th:text="${client.address != null ? client.address : '—'}">—</td>
+                <td class="actions mobile-actions">
+                    <a th:href="@{/app/clients/{id}/edit(id=${client.id})}" class="link">Editar</a>
+                    <form th:action="@{/app/clients/{id}/delete(id=${client.id})}" method="post"
+                          data-confirm="¿Borrar este cliente? Esta acción no se puede deshacer.">
+                        <button type="submit" class="link-button danger">Borrar</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+<script th:src="@{/js/app.js}" defer></script>
+</body>
+</html>

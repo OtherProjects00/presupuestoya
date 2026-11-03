@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Cliente')}"></head>
+<body>
+<header th:replace="~{fragments/header :: header}"></header>
+
+<main class="container narrow">
+    <div th:replace="~{fragments/alerts :: alerts}"></div>
+
+    <section class="page-head">
+        <div>
+            <p class="eyebrow">Clientes</p>
+            <h1 th:text="${clientForm.id == null ? 'Nuevo cliente' : 'Editar cliente'}">Cliente</h1>
+        </div>
+        <a th:href="@{/app/clients}" class="btn">Volver</a>
+    </section>
+
+    <form th:action="@{/app/clients/save}" th:object="${clientForm}" method="post" class="card form-card">
+        <div th:if="${#fields.hasGlobalErrors()}" class="alert alert-error" role="alert">
+            <p th:each="error : ${#fields.globalErrors()}" th:text="${error}"></p>
+        </div>
+
+        <input type="hidden" th:field="*{id}">
+
+        <label for="name">Nombre o razón social *</label>
+        <input id="name" type="text" th:field="*{name}" maxlength="120" required class="input"
+               autocomplete="name">
+        <p class="field-error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
+
+        <div class="form-grid">
+            <div>
+                <label for="phone">Teléfono</label>
+                <input id="phone" type="tel" th:field="*{phone}" maxlength="40" class="input"
+                       autocomplete="tel" placeholder="+54 9 11 5555-5555">
+                <p class="field-error" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></p>
+            </div>
+            <div>
+                <label for="email">Email</label>
+                <input id="email" type="email" th:field="*{email}" maxlength="254" class="input"
+                       autocomplete="email">
+                <p class="field-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
+            </div>
+        </div>
+
+        <label for="address">Dirección</label>
+        <input id="address" type="text" th:field="*{address}" maxlength="250" class="input"
+               autocomplete="street-address">
+        <p class="field-error" th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></p>
+
+        <label for="notes">Notas internas</label>
+        <textarea id="notes" th:field="*{notes}" maxlength="1000" rows="4" class="input"></textarea>
+        <p class="help">Solo las ves vos. No aparecen en el presupuesto público.</p>
+        <p class="field-error" th:if="${#fields.hasErrors('notes')}" th:errors="*{notes}"></p>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Guardar cliente</button>
+            <a th:href="@{/app/clients}" class="btn">Cancelar</a>
+        </div>
+    </form>
+</main>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+<script th:src="@{/js/app.js}" defer></script>
+</body>
+</html>

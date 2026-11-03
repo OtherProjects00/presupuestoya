@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Error')}"></head>
+<body class="auth-page error-page">
+<main class="error-shell">
+    <a th:replace="~{fragments/brand :: brand}"></a>
+    <section class="error-card">
+        <span class="error-orbit" aria-hidden="true">!</span>
+        <p class="eyebrow">Error</p>
+        <h1>Algo salió mal</h1>
+        <p class="muted">La página que buscás no está disponible.</p>
+        <a th:href="@{/}" class="btn btn-primary btn-block">Volver al inicio</a>
+    </section>
+</main>
+</body>
+</html>

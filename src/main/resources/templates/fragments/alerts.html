@@ -1,0 +1,4 @@
+<div th:fragment="alerts" class="alerts" xmlns:th="http://www.thymeleaf.org">
+    <div th:if="${success}" class="alert alert-success" role="status" th:text="${success}"></div>
+    <div th:if="${error}" class="alert alert-error" role="alert" th:text="${error}"></div>
+</div>

@@ -1,0 +1,30 @@
+services:
+  app:
+    build: .
+    image: presupuestoya:local
+    container_name: presupuestoya
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      # Cambiá APP_BASE_URL por tu dominio real cuando publiques la app.
+      APP_BASE_URL: ${APP_BASE_URL:-http://localhost:8080}
+      # En local se usa HTTP. Detrás de HTTPS poné SESSION_COOKIE_SECURE=true.
+      SESSION_COOKIE_SECURE: ${SESSION_COOKIE_SECURE:-false}
+      DB_PASSWORD: ${DB_PASSWORD:-}
+      REGISTRATION_ENABLED: ${REGISTRATION_ENABLED:-true}
+      PUBLIC_QUOTE_DAYS: ${PUBLIC_QUOTE_DAYS:-30}
+      LOGIN_MAX_ATTEMPTS: ${LOGIN_MAX_ATTEMPTS:-5}
+      LOGIN_BLOCK_MINUTES: ${LOGIN_BLOCK_MINUTES:-15}
+    volumes:
+      - presupuestoya-data:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O - http://127.0.0.1:8080/actuator/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  presupuestoya-data:

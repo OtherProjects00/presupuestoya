@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Acceso denegado')}"></head>
+<body class="auth-page">
+<header th:replace="~{fragments/header :: header}"></header>
+<main class="auth-container">
+    <section class="auth-card">
+        <p class="eyebrow">Error 403</p>
+        <h1>Acceso denegado</h1>
+        <p class="muted">No tenés permiso para ver esta página o este dato no te pertenece.</p>
+        <a th:href="@{/app}" class="btn btn-primary btn-block">Volver al panel</a>
+    </section>
+</main>
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

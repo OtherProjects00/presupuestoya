@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Ingresar')}"></head>
+<body class="auth-page">
+<main class="auth-shell">
+    <aside th:replace="~{fragments/auth-aside :: authAside('Acceso', 'Volvé a lo que mejor sabés hacer.', 'Tus presupuestos, clientes y números te están esperando en un solo lugar.')}"></aside>
+
+    <section class="auth-main">
+        <div class="auth-top">
+            <a th:href="@{/}" class="auth-back">← Volver al inicio</a>
+            <span class="auth-secure">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+                    <path d="M7 10V8a5 5 0 0 1 10 0v2M6 10h12v9H6z" stroke="currentColor" stroke-width="1.8"
+                          stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Conexión segura
+            </span>
+        </div>
+
+        <div class="auth-form-wrap">
+            <p class="eyebrow">Tu cuenta</p>
+            <h1>Ingresar</h1>
+            <p class="muted">Entrá para ver tus presupuestos y clientes.</p>
+
+            <div th:if="${param.error}" class="alert alert-error" role="alert">
+                Email o contraseña incorrectos.
+            </div>
+            <div th:if="${param.locked}" class="alert alert-error" role="alert">
+                Demasiados intentos fallidos. Esperá unos minutos y volvé a intentar.
+            </div>
+            <div th:if="${param.logout}" class="alert alert-success" role="status">
+                Sesión cerrada correctamente.
+            </div>
+            <div th:if="${param.registered}" class="alert alert-success" role="status">
+                Cuenta creada. Ya podés ingresar.
+            </div>
+            <div th:if="${param.registrationDisabled}" class="alert alert-error" role="alert">
+                El registro está deshabilitado. Pedí una invitación al administrador.
+            </div>
+            <div th:replace="~{fragments/alerts :: alerts}"></div>
+
+            <form th:action="@{/login}" method="post" class="auth-form">
+                <div class="field">
+                    <label for="username">Email</label>
+                    <input id="username" name="username" type="email" autocomplete="username" required autofocus
+                           class="input" placeholder="vos@tunegocio.com">
+                </div>
+
+                <div class="field">
+                    <label for="password">Contraseña</label>
+                    <input id="password" name="password" type="password" autocomplete="current-password" required
+                           class="input" placeholder="Tu contraseña">
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block btn-lg">Ingresar</button>
+            </form>
+
+            <p class="auth-switch">¿No tenés cuenta? <a th:href="@{/register}">Crear una cuenta</a></p>
+        </div>
+
+        <p class="auth-legal">Tus datos te pertenecen. Nunca los compartimos.</p>
+    </section>
+</main>
+
+<script th:src="@{/js/app.js}" defer></script>
+</body>
+</html>

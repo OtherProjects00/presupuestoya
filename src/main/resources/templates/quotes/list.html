@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Presupuestos')}"></head>
+<body>
+<header th:replace="~{fragments/header :: header}"></header>
+
+<main class="container">
+    <div th:replace="~{fragments/alerts :: alerts}"></div>
+
+    <section class="page-head">
+        <div>
+            <p class="eyebrow">Presupuestos</p>
+            <h1>Tus presupuestos</h1>
+            <p class="muted">Creá, enviá y seguí cada trabajo desde un solo lugar.</p>
+        </div>
+        <a th:href="@{/app/quotes/new}" class="btn btn-primary">Nuevo presupuesto</a>
+    </section>
+
+    <nav class="filter-row" aria-label="Filtrar por estado">
+        <a th:href="@{/app/quotes}" class="filter" th:classappend="${selectedStatus == ''} ? ' active'">Todos</a>
+        <a th:each="status : ${statuses}"
+           th:href="@{/app/quotes(status=${status.name()})}"
+           class="filter"
+           th:classappend="${selectedStatus == status.name()} ? ' active'"
+           th:text="${status.label}">Estado</a>
+    </nav>
+
+    <div th:if="${#lists.isEmpty(quotes)}" class="empty-state">
+        <h3>No hay presupuestos en esta vista</h3>
+        <p>Cuando crees uno, va a aparecer acá con su estado y total.</p>
+        <a th:href="@{/app/quotes/new}" class="btn btn-primary">Crear presupuesto</a>
+    </div>
+
+    <div th:if="${!#lists.isEmpty(quotes)}" class="table-wrap table-stack">
+        <table>
+            <thead>
+            <tr>
+                <th>Número</th>
+                <th>Cliente</th>
+                <th>Emisión</th>
+                <th>Validez</th>
+                <th>Total</th>
+                <th>Estado</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="quote : ${quotes}">
+                <td class="mono" data-label="Número" th:text="${quote.number}">P-2026-0000</td>
+                <td data-label="Cliente" th:text="${quote.client.name}">Cliente</td>
+                <td data-label="Emisión" th:text="${quote.issueDateFormatted}">01/01/2026</td>
+                <td data-label="Validez" th:text="${quote.validUntilFormatted}">15/01/2026</td>
+                <td class="mono" data-label="Total" th:text="|${profile.currency} ${#numbers.formatDecimal(quote.total, 1, 'POINT', 2, 'COMMA')}|">ARS 0,00</td>
+                <td data-label="Estado"><span class="badge" th:classappend="${quote.displayStatusCss}" th:text="${quote.displayStatusLabel}">Borrador</span></td>
+                <td class="actions mobile-actions">
+                    <a th:href="@{/app/quotes/{id}(id=${quote.id})}" class="link">Abrir</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+<script th:src="@{/js/app.js}" defer></script>
+</body>
+</html>

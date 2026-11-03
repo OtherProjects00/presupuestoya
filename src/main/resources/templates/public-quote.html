@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#0b2d78">
+    <title th:text="|Presupuesto ${quote.quoteNumber()}|">Presupuesto</title>
+    <link rel="icon" type="image/svg+xml" th:href="@{/favicon.svg}">
+    <link rel="preload" th:href="@{/fonts/roboto-latin.woff2}" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body class="public-page">
+<header class="public-header">
+    <a th:replace="~{fragments/brand :: brand}"></a>
+    <span class="badge" th:classappend="${quote.statusCss()}" th:text="${quote.statusLabel()}">Enviado</span>
+</header>
+
+<main class="public-container">
+    <section class="public-card">
+        <div class="public-top">
+            <div>
+                <p class="eyebrow">Presupuesto</p>
+                <h1 class="mono" th:text="${quote.quoteNumber()}">P-2026-0000</h1>
+                <p class="muted" th:text="|Para ${quote.clientName()}|">Cliente</p>
+            </div>
+            <div class="public-business">
+                <strong th:text="${quote.businessName()}">Negocio</strong>
+                <p th:if="${quote.ownerName() != null}" th:text="${quote.ownerName()}">Responsable</p>
+                <p th:if="${quote.phone() != null}" th:text="${quote.phone()}">Teléfono</p>
+                <p th:if="${quote.email() != null}" th:text="${quote.email()}">Email</p>
+                <p th:if="${quote.address() != null}" th:text="${quote.address()}">Dirección</p>
+            </div>
+        </div>
+
+        <div class="public-meta">
+            <span th:text="|Emitido: ${quote.issueDateFormatted()}|">Emitido</span>
+            <span th:text="|Válido hasta: ${quote.validUntilFormatted()}|">Válido</span>
+        </div>
+
+        <div class="table-wrap table-stack">
+            <table>
+                <thead>
+                <tr>
+                    <th>Descripción</th>
+                    <th class="num">Cantidad</th>
+                    <th class="num">Precio</th>
+                    <th class="num">Subtotal</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="item : ${quote.items()}">
+                    <td data-label="Descripción" th:text="${item.description()}">Descripción</td>
+                    <td class="num" data-label="Cantidad" th:text="${#numbers.formatDecimal(item.quantity(), 1, 2)}">1</td>
+                    <td class="num" data-label="Precio" th:text="${quote.currency() + ' ' + #numbers.formatDecimal(item.unitPrice(), 1, 'POINT', 2, 'COMMA')}">ARS 0,00</td>
+                    <td class="num" data-label="Subtotal" th:text="${quote.currency() + ' ' + #numbers.formatDecimal(item.lineTotal(), 1, 'POINT', 2, 'COMMA')}">ARS 0,00</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="totals">
+            <div><span>Subtotal</span><strong th:text="${quote.currency() + ' ' + #numbers.formatDecimal(quote.subtotal(), 1, 'POINT', 2, 'COMMA')}">ARS 0,00</strong></div>
+            <div><span>IVA (<span th:text="${#numbers.formatDecimal(quote.taxRate(), 1, 2)}">0</span>%)</span><strong th:text="${quote.currency() + ' ' + #numbers.formatDecimal(quote.taxAmount(), 1, 'POINT', 2, 'COMMA')}">ARS 0,00</strong></div>
+            <div class="grand-total"><span>Total</span><strong th:text="${quote.currency() + ' ' + #numbers.formatDecimal(quote.total(), 1, 'POINT', 2, 'COMMA')}">ARS 0,00</strong></div>
+        </div>
+
+        <section th:if="${quote.notes() != null}" class="public-notes">
+            <h2>Observaciones</h2>
+            <p class="pre-line" th:text="${quote.notes()}">Observaciones</p>
+        </section>
+
+        <section th:if="${quote.terms() != null}" class="public-notes">
+            <h2>Condiciones</h2>
+            <p class="pre-line" th:text="${quote.terms()}">Condiciones</p>
+        </section>
+
+        <div class="public-actions no-print">
+            <a th:if="${quote.hasWhatsapp()}" th:href="${quote.whatsappUrl()}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+                Consultar por WhatsApp
+            </a>
+            <button type="button" id="printButton" class="btn">Imprimir / Guardar PDF</button>
+        </div>
+    </section>
+
+    <p class="public-footer">Presupuesto compartido con PresupuestoYa.</p>
+</main>
+
+<script th:src="@{/js/app.js}" defer></script>
+</body>
+</html>
