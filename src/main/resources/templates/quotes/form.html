@@ -17,7 +17,7 @@
     </section>
 
     <form th:action="@{/app/quotes/save}" th:object="${quoteForm}" method="post" class="stack"
-          id="quoteForm">
+          id="quoteForm" data-prevent-double-submit>
         <div th:if="${#fields.hasGlobalErrors()}" class="alert alert-error" role="alert">
             <p th:each="error : ${#fields.globalErrors()}" th:text="${error}"></p>
         </div>
@@ -128,7 +128,7 @@
         </section>
 
         <div class="form-actions">
-            <button type="submit" class="btn btn-primary">
+            <button type="submit" class="btn btn-primary" data-loading-text="Guardando...">
                 <span th:text="${quoteForm.id == null ? 'Guardar borrador' : 'Guardar cambios'}">Guardar</span>
             </button>
             <a th:if="${quoteForm.id == null}" th:href="@{/app/quotes}" class="btn">Cancelar</a>

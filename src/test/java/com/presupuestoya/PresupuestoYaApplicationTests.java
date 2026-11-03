@@ -61,11 +61,14 @@ class PresupuestoYaApplicationTests {
 
         mvc.perform(get("/login"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Ingresar")));
+                .andExpect(content().string(containsString("Ingresar")))
+                .andExpect(content().string(containsString("data-toggle-password")));
 
         mvc.perform(get("/register"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Crear cuenta")));
+                .andExpect(content().string(containsString("Crear cuenta")))
+                .andExpect(content().string(containsString("aria-controls=\"password\"")))
+                .andExpect(content().string(containsString("aria-controls=\"confirmPassword\"")));
 
         // La fuente es un recurso público: la landing y el login la necesitan sin sesión.
         mvc.perform(get("/fonts/roboto-latin.woff2"))
@@ -174,6 +177,7 @@ class PresupuestoYaApplicationTests {
                 .andExpect(redirectedUrlPattern("/app/quotes/*"));
 
         Quote quote = quoteService.list(owner, null).get(0);
+        assertThat(quoteService.list(owner, null)).hasSize(1);
         assertThat(quote.getSubtotal()).isEqualByComparingTo("3001.00");
         assertThat(quote.getTaxAmount()).isEqualByComparingTo("630.21");
         assertThat(quote.getTotal()).isEqualByComparingTo("3631.21");
@@ -239,7 +243,8 @@ class PresupuestoYaApplicationTests {
 
         mvc.perform(get("/app/quotes/new").with(user(owner.getEmail())))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Nuevo presupuesto")));
+                .andExpect(content().string(containsString("Nuevo presupuesto")))
+                .andExpect(content().string(containsString("data-prevent-double-submit")));
 
         mvc.perform(get("/app/settings").with(user(owner.getEmail())))
                 .andExpect(status().isOk())

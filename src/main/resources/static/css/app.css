@@ -465,6 +465,29 @@ a:focus-visible {
     box-shadow: 0 0 0 4px rgba(29, 91, 255, 0.12);
 }
 
+.password-field {
+    position: relative;
+}
+
+.password-field .input {
+    padding-right: 5.5rem;
+}
+
+.password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 0.75rem;
+    transform: translateY(-50%);
+    padding: 0.3rem 0.2rem;
+    border: 0;
+    background: transparent;
+    color: var(--blue-dark);
+    font: inherit;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
 textarea.input {
     min-height: 7rem;
     resize: vertical;

@@ -1,4 +1,39 @@
 document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('form[data-prevent-double-submit]').forEach(function (form) {
+        var submitting = false;
+        form.addEventListener('submit', function (event) {
+            if (submitting) {
+                event.preventDefault();
+                return;
+            }
+            submitting = true;
+            var submitButton = event.submitter;
+            if (submitButton) {
+                submitButton.disabled = true;
+                var loadingText = submitButton.getAttribute('data-loading-text');
+                if (loadingText) {
+                    submitButton.textContent = loadingText;
+                }
+            }
+        });
+    });
+
+    document.querySelectorAll('[data-toggle-password]').forEach(function (button) {
+        var input = document.getElementById(button.getAttribute('aria-controls'));
+        if (!input) {
+            return;
+        }
+
+        button.addEventListener('click', function () {
+            var isPassword = input.type === 'password';
+            input.type = isPassword ? 'text' : 'password';
+            button.textContent = isPassword
+                ? button.getAttribute('data-hide-label')
+                : button.getAttribute('data-show-label');
+            button.setAttribute('aria-pressed', String(isPassword));
+        });
+    });
+
     document.querySelectorAll('form[data-confirm]').forEach(function (form) {
         form.addEventListener('submit', function (event) {
             var message = form.getAttribute('data-confirm');
